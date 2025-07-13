@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gm_proj/convert_latlng_to_address.dart';
-
-import 'home_screen.dart';
+import 'package:gm_proj/current_user_location_on_marker/user_location_on_marker.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: ConvertLatlngToAddress(),
+      home: UserLocationOnMarker(),
     );
   }
 }
