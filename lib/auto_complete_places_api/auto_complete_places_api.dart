@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'package:http/http.dart' as http;
+
 
 class AutoCompletePlacesApi extends StatefulWidget {
   const AutoCompletePlacesApi({super.key});
@@ -11,8 +15,9 @@ class AutoCompletePlacesApi extends StatefulWidget {
 class _AutoCompletePlacesApiState extends State<AutoCompletePlacesApi> {
 
   final _controller = TextEditingController();
-  var uuid = Uuid();
+  var uuid = const Uuid();
   String _sessionToken = '122344';
+  List<dynamic> _placesList = [];
 
   @override
   void initState() {
@@ -39,6 +44,17 @@ class _AutoCompletePlacesApiState extends State<AutoCompletePlacesApi> {
      String baseURL = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
      String request = '$baseURL?input=$input&key=$kPlaces_API_KEY&sessiontoken=$_sessionToken';
 
+     var response = await http.get(Uri.parse(request));
+
+     if(response.statusCode == 200){
+        setState(() {
+          _placesList = jsonDecode(response.body.toString()) ['prediction'];
+        });
+     }
+     else{
+        throw Exception('Failed to load data');
+     }
+
   }
 
 
@@ -46,17 +62,17 @@ class _AutoCompletePlacesApiState extends State<AutoCompletePlacesApi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Google search places api"),
+        title: const Text("Google search places api"),
         centerTitle: true,
         elevation: 5,
       ),
       body: Padding(
-          padding: EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 12),
         child: Column(
           children: [
             TextFormField(
               controller: _controller,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Search Places with name',
               ),
             ),
